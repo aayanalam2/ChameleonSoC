@@ -13,12 +13,14 @@
 `include "PC.v"
 `include "PCplus4.v"
 
-module RISCV( clk, Test_variable, reset,gfpga_pad_GPIO_PAD, pReset, set);
+module RISCV( clk, Test_variable, reset,gfpga_pad_GPIO_PAD, pReset, set, head, programming_clock);
 input reset;
 input clk;
 input pReset;
 input set;
 output reg [31:0] Test_variable;
+output head;
+output programming_clock;
 wire fpga_tail;
 wire  fpga_head;
 wire  prog_clk;
@@ -67,7 +69,8 @@ wire [31:0] mem_data_in;
 wire [0:2]mem_control;
 wire [31:0] wbdata;
 wire [31:0] writeback_data;
-
+assign head = fpga_head;
+assign programming_clock = prog_clk;
 BussMux2x1 mux_pc_input( PC_added_4, ALU_result, PC_sel, PC_input);
 
 PC PC1( PC_out, PC_input, clk, reset);

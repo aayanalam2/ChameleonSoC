@@ -27,7 +27,7 @@ initial
 	assign GPIO[6] = b;
 	assign c = GPIO[3];
 		assign GPIO[0] = 1'b0;
-	assign GPIO[1] = 1'b0;,
+	assign GPIO[1] = 1'b0;
 	assign GPIO[2] = 1'b0;
 	assign GPIO[4] = 1'b0;
 	assign GPIO[5] = 1'b0;

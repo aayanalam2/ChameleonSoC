@@ -54,8 +54,8 @@ reg addler_flag;
 
   
 
-assign op_clk = 0;
-assign gReset = ~bitstream_complt;
+assign op_clk = (bitstream_complt) & (clk);
+assign gReset = 1;
 always @(posedge clk or negedge reset) begin
     if (!reset) begin
         FCB_control_reg <= 32'h0000;
@@ -118,7 +118,7 @@ always @ (*) begin
 
 end
 always @(clk) begin //look again
-        if(clkflag && count_value_write<32 ) prog_clk = clk;
+        if(clkflag && count_value_write<32 && bitstream_count != 0 ) prog_clk = clk;
         else prog_clk = 0;    
 end
 

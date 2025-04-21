@@ -18,7 +18,7 @@ initial
 		r_pReset = 1'b1;
 	#3.333333492	r_pReset = 1'b0;
 	end
-	assign pReset = r_pReset;
+	assign pReset = 0;
 	assign set = r_set;
 	wire head;
 	wire programming_clock;
@@ -44,7 +44,7 @@ initial
 	rst = 1;
 	a = 1;
 	b = 0;
-	#400000;
+	#40000;
 		a = 0;
 			b = 0;
 			#10;

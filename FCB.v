@@ -14,7 +14,8 @@ module FCB (
     output reg prog_clk,
     output reg fpga_head,
     output gReset,
-    output op_clk
+    output op_clk,
+    output prset
 );
 
 reg [31:0] FCB_control_reg;

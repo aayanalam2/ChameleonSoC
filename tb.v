@@ -1,3 +1,5 @@
+`default_nettype none
+`timescale  1ns/1ps
 module tb();
 	reg clk;
 	reg rst;
@@ -7,22 +9,15 @@ module tb();
 	reg b;
 	wire c;
 	wire pReset;
-	wire set;
+	reg set;
 	reg r_pReset;
 	reg r_set;
 	initial begin
-		r_set = 1'b0;
+	 set = 0;
 	end
-initial
-	begin
-		r_pReset = 1'b1;
-	#3.333333492	r_pReset = 1'b0;
-	end
-	assign pReset = 0;
-	assign set = r_set;
 	wire head;
 	wire programming_clock;
-	RISCV instan(clk,test,rst,GPIO, pReset, set, head, programming_clock);
+	RISCV instan(clk,test,rst,GPIO, set, head, programming_clock);
 		assign GPIO[7] = a;
 	assign GPIO[6] = b;
 	assign c = GPIO[3];
@@ -34,17 +29,33 @@ initial
 	initial begin
 	clk = 0;
 	forever begin
-	#2
+	#1.666666746
 	clk = ~clk;
 	end
 	end
 	initial begin
-	rst = 0;
-	#3;
-	rst = 1;
+	#6811.3;
+	a = 0;
+	b = 1;
+	#1;
 	a = 1;
 	b = 0;
-	#40000;
+	#1;
+	a = 0;
+	b = 0;
+	#1;
+	a = 1;
+	b = 1;
+	end
+	initial begin
+	rst = 0;
+	a = 1;
+	b = 0;
+	#3;
+	rst = 1;
+	a = 0;
+	b = 1;
+	#20000;
 		a = 0;
 			b = 0;
 			#10;

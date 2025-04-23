@@ -17,7 +17,7 @@ module FCB (
     output op_clk,
     output prset
 );
-
+reg programming_reset;
 reg [31:0] FCB_control_reg;
 reg [31:0] FCB_status_reg;
 reg [31:0] Bitstream_write_reg;
@@ -54,11 +54,12 @@ reg addler_flag;
   
 
   
-
+assign prset = programming_reset;
 assign op_clk = (bitstream_complt) & (clk);
 assign gReset = 1;
 always @(posedge clk or negedge reset) begin
     if (!reset) begin
+        programming_reset <= 1;
         FCB_control_reg <= 32'h0000;
         Bitstream_write_reg <= 32'h0000;
      
@@ -184,6 +185,7 @@ begin
         begin
           if (wb_we && wb_address == 3'b001) begin 
                 state <= TRANSMIT;
+                programming_reset <= 0;
                 if (wb_select[0]) temp[7:0] <= wb_data_in[7:0];
                 if (wb_select[1]) temp[15:8] <= wb_data_in[15:8];
                 if (wb_select[2]) temp[23:16] <= wb_data_in[23:16];

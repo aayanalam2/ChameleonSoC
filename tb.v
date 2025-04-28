@@ -141,7 +141,7 @@ module tb();
     
     // Waveform dumping
     initial begin
-        $dumpfile("bitstream_test.vcd");
+        $dumpfile("waves.vcd");
         $dumpvars(0, tb);
     end
     

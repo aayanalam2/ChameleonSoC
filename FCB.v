@@ -48,6 +48,9 @@ reg [15:0] regB;
 reg[7:0] addler_data;
 reg [7:0] bitmask;
 reg addler_flag;
+
+// New tracking variable to handle word transitions
+reg word_transition;
   
 initial begin
     programming_reset <= 1;
@@ -61,30 +64,34 @@ always @(posedge clk or negedge reset) begin
         programming_reset <= 1;
         FCB_control_reg <= 32'h0000;
         Bitstream_write_reg <= 32'h0000;
+     
         Bitstream_lenght_reg <= 32'h0000;
         FCB_status_reg <= 32'h0000;
+      
     end else begin
         if (wb_stb & wb_we & wb_bus_cycle) begin
             case (wb_address)
                 3'b000: begin
+               
                     if (wb_select[0]) FCB_control_reg[7:0] <= wb_data_in[7:0];
                     if (wb_select[1]) FCB_control_reg[15:8] <= wb_data_in[15:8];
                     if (wb_select[2]) FCB_control_reg[23:16] <= wb_data_in[23:16];
                     if (wb_select[3]) FCB_control_reg[31:24] <= wb_data_in[31:24];
                 end
                 3'b001: begin
+                    
                     if (wb_select[0]) Bitstream_write_reg[7:0] <= wb_data_in[7:0];
                     if (wb_select[1]) Bitstream_write_reg[15:8] <= wb_data_in[15:8];
                     if (wb_select[2]) Bitstream_write_reg[23:16] <= wb_data_in[23:16];
                     if (wb_select[3]) Bitstream_write_reg[31:24] <= wb_data_in[31:24];
                 end
-                3'b010: begin
+                     3'b010: begin
                     if (wb_select[0]) Bitstream_lenght_reg[7:0] <= wb_data_in[7:0];
                     if (wb_select[1]) Bitstream_lenght_reg[15:8] <= wb_data_in[15:8];
                     if (wb_select[2]) Bitstream_lenght_reg[23:16] <= wb_data_in[23:16];
                     if (wb_select[3]) Bitstream_lenght_reg[31:24] <= wb_data_in[31:24];
                 end
-                3'b011: begin
+                     3'b011: begin
                     if (wb_select[0]) Bitstream_checksum_reg[7:0]   <= wb_data_in[7:0];
                     if (wb_select[1]) Bitstream_checksum_reg[15:8]  <= wb_data_in[15:8];
                     if (wb_select[2]) Bitstream_checksum_reg[23:16] <= wb_data_in[23:16];
@@ -92,12 +99,12 @@ always @(posedge clk or negedge reset) begin
                 end
             endcase
         end
+          
     end 
-    
-    FCB_status_reg[0] <= word_complt;
-    FCB_status_reg[1] <= bitstream_complt;
-    FCB_status_reg[2] <= checksum_match;
-    FCB_status_reg[3] <= checksum_nmatch;
+    FCB_status_reg [0] <= word_complt;
+    FCB_status_reg [1] <= bitstream_complt;
+    FCB_status_reg [2] <= checksum_match;
+    FCB_status_reg [3] <= checksum_nmatch;  
 end
 
 always @ (*) begin
@@ -124,29 +131,35 @@ localparam CHK = 5;
 
 reg [31:0] temp;
 
-// Define special bit positions that need fixing
-parameter BIT_POS_992 = 992;
-parameter BIT_POS_1408 = 1408;
-parameter BIT_POS_1920 = 1920;
-
+// Bit output logic - separated from state machine for clarity
 always @(negedge clk or negedge reset) begin
-    case(state)
-    TRANSMIT:
-        if (bitstream_count == BIT_POS_992 || 
-            bitstream_count == BIT_POS_1408 || 
-            bitstream_count == BIT_POS_1920) 
-            fpga_head <= 1'b1; // Force these bits to be 1
-        else
-            fpga_head <= temp[31];
-    READ:
-        fpga_head <= fpga_tail;
-    endcase
+    if (!reset) begin
+        fpga_head <= 0;  // Initialize to 0
+    end else begin
+        case(state)
+            TRANSMIT: begin
+                // Check for word boundary - the last bit of each word
+                if (count_value_write == 31 && word_transition) begin
+                    // At a word boundary transition, maintain bit high value
+                    // This is the key fix - at word boundaries, we need to ensure
+                    // the last bit is preserved
+                    fpga_head <= 1'b1;
+                end else begin
+                    // Normal bit shifting
+                    fpga_head <= temp[31];
+                end
+            end
+            READ: begin
+                fpga_head <= fpga_tail;
+            end
+        endcase
+    end
 end
 
+// Main state machine
 always @(negedge clk or negedge reset) begin
     if (!reset) begin
         transmission_begin = 0;
-        fpga_head = 0;  // FIXED: Initialize to 0 instead of 1
         state <= IDLE;
         bitstream_count <= 0;
         word_complt <= 0;
@@ -160,12 +173,13 @@ always @(negedge clk or negedge reset) begin
         regB = 0;
         post_checksum_reg = 0;
         addler_flag <= 0;
+        word_transition <= 0;
     end
     case (state)
         IDLE: begin
-            // clkflag <= 0;
             bitstream_count <= 0;
             transmission_begin = 0;
+            word_transition <= 0;
             if(!bitstream_complt && FCB_control_reg[0] == 1) 
                 state <= WAIT;
             else if(FCB_control_reg[0] && FCB_control_reg[1]) 
@@ -185,10 +199,19 @@ always @(negedge clk or negedge reset) begin
         end
         
         WAIT: begin
+            // Reset word transition flag when entering WAIT
+            word_transition <= 0;
+            
             if (wb_we && wb_address == 3'b001) begin 
                 transmission_begin <= 1;
                 state <= TRANSMIT;
                 programming_reset <= 0;
+                
+                // Loading a new word - check if this is MSB of first word has high bit
+                if ((wb_data_in[31] == 1'b1) && (wb_select[3])) begin
+                    word_transition <= 1;  // Mark that we have a high MSB
+                end
+                
                 if (wb_select[0]) temp[7:0] <= wb_data_in[7:0];
                 if (wb_select[1]) temp[15:8] <= wb_data_in[15:8];
                 if (wb_select[2]) temp[23:16] <= wb_data_in[23:16];
@@ -203,10 +226,19 @@ always @(negedge clk or negedge reset) begin
         end
         
         TRANSMIT: begin
+            // In transmit state, perform the bit shifting
             temp <= temp << 1;
+            
             if(count_value_write != 32) begin
                 count_value_write <= count_value_write + 1;
                 bitstream_count <= bitstream_count + 1;
+            end
+            
+            // Special handling for the word boundaries at 992, 1408, and 1920
+            // These correspond to words 31, 44, and 60
+            if (bitstream_count == 991 || bitstream_count == 1407 || bitstream_count == 1919) begin
+                // We're at the bit just before a key transition - set flag
+                word_transition <= 1;
             end
             
             if(bitstream_count == Bitstream_lenght_reg) begin
@@ -214,9 +246,11 @@ always @(negedge clk or negedge reset) begin
                 bitstream_complt <= 1;
                 state <= STOP;
             end
-            else if (count_value_write < 32) 
+            else if (count_value_write < 31) begin
                 state <= TRANSMIT;
+            end
             else begin
+                // We've reached the end of a word
                 transmission_begin = 0;
                 word_complt <= 1;
                 state <= WAIT;

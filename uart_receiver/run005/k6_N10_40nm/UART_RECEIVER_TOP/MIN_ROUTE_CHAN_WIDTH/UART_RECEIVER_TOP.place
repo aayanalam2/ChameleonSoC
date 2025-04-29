@@ -1,0 +1,22 @@
+Netlist_File: UART_RECEIVER_TOP.net Netlist_ID: SHA256:ffcde88fa7e06e3398188a2c867ddbeac0d919613e4efbe16496f5410a140ebb
+Array size: 5 x 5 logic blocks
+
+#block name	x	y	subblk	block number
+#----------	--	--	------	------------
+n72		3	2	0	#0
+n77		1	2	0	#1
+n87		2	1	0	#2
+n57		3	1	0	#3
+n92		2	2	0	#4
+n112		2	3	0	#5
+$undef		1	1	0	#6
+out:recv_DATA[0]	2	4	6	#7
+out:recv_DATA[1]	2	4	4	#8
+out:recv_DATA[2]	2	4	0	#9
+out:recv_DATA[3]	2	4	2	#10
+out:rec_done	2	4	5	#11
+out:t_DATA_SER	1	0	2	#12
+out:t_done	1	0	3	#13
+i_clk		2	4	1	#14
+i_rst		3	4	1	#15
+r_DATA_SER	2	0	5	#16

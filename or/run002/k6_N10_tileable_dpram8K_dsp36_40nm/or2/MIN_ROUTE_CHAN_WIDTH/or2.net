@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<block name="or2.net" instance="FPGA_packed_netlist[0]" architecture_id="SHA256:ae7eba06eaf4982d7278a430e69491f59227a3211ca4485d5699b62577b71cc0" atom_netlist_id="SHA256:761148e759d6379c06e13c1761fde00d618c13a0d571a13de5c4f02becf0efef">
+	<inputs>A B</inputs>
+	<outputs>out:Y</outputs>
+	<clocks></clocks>
+	<block name="Y" instance="clb[0]" mode="default">
+		<inputs>
+			<port name="I">open open A open open B open open open open open open open open open open open open open open open open open open open open open open open open open open open open open open open open open open</port>
+			<port name="cin">open</port>
+		</inputs>
+		<outputs>
+			<port name="O">open open open open open open open open open fle[9].out[0]-&gt;clbouts1 open open open open open open open open open open</port>
+			<port name="cout">open</port>
+		</outputs>
+		<clocks>
+			<port name="clk">open</port>
+		</clocks>
+		<block name="open" instance="fle[0]" />
+		<block name="open" instance="fle[1]" />
+		<block name="open" instance="fle[2]" />
+		<block name="open" instance="fle[3]" />
+		<block name="open" instance="fle[4]" />
+		<block name="open" instance="fle[5]" />
+		<block name="open" instance="fle[6]" />
+		<block name="open" instance="fle[7]" />
+		<block name="open" instance="fle[8]" />
+		<block name="Y" instance="fle[9]" mode="n1_lut6">
+			<inputs>
+				<port name="in">open open open clb.I[2]-&gt;crossbar clb.I[5]-&gt;crossbar open</port>
+				<port name="cin">open</port>
+			</inputs>
+			<outputs>
+				<port name="out">ble6[0].out[0]-&gt;direct2 open</port>
+				<port name="cout">open</port>
+			</outputs>
+			<clocks>
+				<port name="clk">open</port>
+			</clocks>
+			<block name="Y" instance="ble6[0]" mode="default">
+				<inputs>
+					<port name="in">open open open fle.in[3]-&gt;direct1 fle.in[4]-&gt;direct1 open</port>
+				</inputs>
+				<outputs>
+					<port name="out">lut6[0].out[0]-&gt;mux1</port>
+				</outputs>
+				<clocks>
+					<port name="clk">open</port>
+				</clocks>
+				<block name="Y" instance="lut6[0]" mode="lut6">
+					<inputs>
+						<port name="in">open open open ble6.in[3]-&gt;direct1 ble6.in[4]-&gt;direct1 open</port>
+					</inputs>
+					<outputs>
+						<port name="out">lut[0].out[0]-&gt;direct:lut6</port>
+					</outputs>
+					<clocks />
+					<block name="Y" instance="lut[0]">
+						<attributes />
+						<parameters />
+						<inputs>
+							<port name="in">open open open lut6.in[3]-&gt;direct:lut6 lut6.in[4]-&gt;direct:lut6 open</port>
+							<port_rotation_map name="in">open open open 1 0 open</port_rotation_map>
+						</inputs>
+						<outputs>
+							<port name="out">Y</port>
+						</outputs>
+						<clocks />
+					</block>
+				</block>
+				<block name="open" instance="ff[0]" />
+			</block>
+		</block>
+	</block>
+	<block name="out:Y" instance="io[1]" mode="outpad">
+		<inputs>
+			<port name="outpad">Y</port>
+		</inputs>
+		<outputs>
+			<port name="inpad">open</port>
+		</outputs>
+		<clocks />
+		<block name="out:Y" instance="outpad[0]">
+			<attributes />
+			<parameters />
+			<inputs>
+				<port name="outpad">io.outpad[0]-&gt;outpad</port>
+			</inputs>
+			<outputs />
+			<clocks />
+		</block>
+	</block>
+	<block name="A" instance="io[2]" mode="inpad">
+		<inputs>
+			<port name="outpad">open</port>
+		</inputs>
+		<outputs>
+			<port name="inpad">inpad[0].inpad[0]-&gt;inpad</port>
+		</outputs>
+		<clocks />
+		<block name="A" instance="inpad[0]">
+			<attributes />
+			<parameters />
+			<inputs />
+			<outputs>
+				<port name="inpad">A</port>
+			</outputs>
+			<clocks />
+		</block>
+	</block>
+	<block name="B" instance="io[3]" mode="inpad">
+		<inputs>
+			<port name="outpad">open</port>
+		</inputs>
+		<outputs>
+			<port name="inpad">inpad[0].inpad[0]-&gt;inpad</port>
+		</outputs>
+		<clocks />
+		<block name="B" instance="inpad[0]">
+			<attributes />
+			<parameters />
+			<inputs />
+			<outputs>
+				<port name="inpad">B</port>
+			</outputs>
+			<clocks />
+		</block>
+	</block>
+</block>

@@ -1,0 +1,16 @@
+* * * * * * * * * * * * * * * * * * * * 
+RunDirectory : /home/fizza/work/or/run001
+python3 /home/fizza/OpenFPGA/openfpga_flow/scripts/run_fpga_flow.py /home/fizza/work/or/k6_N10_tileable_dpram8K_dsp36_40nm.xml /home/fizza/work/or/or.v --top_module  --run_dir /home/fizza/work/or/run001/k6_N10_tileable_dpram8K_dsp36_40nm/MIN_ROUTE_CHAN_WIDTH --fpga_flow yosys_vpr --openfpga_shell_template /home/fizza/work/or/vtr_benchmark_template_script.openfpga --openfpga_arch_file /home/fizza/OpenFPGA/openfpga_flow/openfpga_arch/k6_frac_N10_adder_chain_dpram8K_dsp36_40nm_openfpga.xml --openfpga_sim_setting_file /home/fizza/OpenFPGA/openfpga_flow/openfpga_simulation_settings/fixed_sim_openfpga.xml --vpr_route_chan_width 300 --power --power_tech /home/fizza/OpenFPGA/openfpga_flow/tech/PTM_45nm/45nm.xml --vpr_fpga_verilog --vpr_fpga_verilog_dir /home/fizza/work/or/run001/k6_N10_tileable_dpram8K_dsp36_40nm/MIN_ROUTE_CHAN_WIDTH --vpr_fpga_x2p_rename_illegal_port --flow_config /home/fizza/work/or/config/task.conf --TOP 
+* * * * * * * * * * * * * * * * * * * * 
+INFO - Validating command line arguments
+INFO - Run directory : /home/fizza/work/or/run001/k6_N10_tileable_dpram8K_dsp36_40nm/MIN_ROUTE_CHAN_WIDTH
+INFO - Running "yosys_vpr" Flow
+INFO - Extracted lut_size size from arch XML = 6
+INFO - Running Yosys with lut_size = 6
+INFO - Launching Run yosys 
+ERROR - Run yosys run failed with returncode 1
+ERROR - command /home/fizza/OpenFPGA/build/yosys/bin/yosys yosys.ys
+ERROR - -->>ERROR: Option -top requires an additional argument!
+ERROR - Current working directory : /home/fizza/work/or/run001/k6_N10_tileable_dpram8K_dsp36_40nm/MIN_ROUTE_CHAN_WIDTH
+ERROR - Failed to run Run yosys task
+ERROR - Exiting . . . . . .

@@ -12,8 +12,8 @@
 `include "./SRC/fpga_defines.v"
 
 // ------ Include user-defined netlists -----
-`include "/home/fizza/OpenFPGA/openfpga_flow/openfpga_cell_library/verilog/dff.v"
-`include "/home/fizza/OpenFPGA/openfpga_flow/openfpga_cell_library/verilog/gpio.v"
+`include "../../SRC/verilog/dff.v"
+`include "../../SRC/verilog/gpio.v"
 // ------ Include primitive module netlists -----
 `include "./SRC/sub_module/inv_buf_passgate.v"
 `include "./SRC/sub_module/arch_encoder.v"

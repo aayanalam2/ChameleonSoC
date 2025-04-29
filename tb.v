@@ -26,8 +26,12 @@ module tb();
     reg [0:0] __set__;
     reg [0:0] __greset__;
     
-    // Bit counter
+    // Testing variables
     integer bit_counter = 0;
+    integer test_counter = 0;
+    integer pass_counter = 0;
+    integer fail_counter = 0;
+    integer i, test_index;
     
     // Force output to 0 at time 0 for visualization
     initial begin
@@ -60,28 +64,98 @@ module tb();
         #2 __greset__ = 1'b1;
         #4 __greset__ = 1'b0;
         
-        // Test sequence
-        #10;
+        // First run the fixed test cases for deterministic verification
+        $display("\n=== FIXED TEST CASES ===");
+        
+        // Test Case 1: a=0, b=0
         a = 1'b0; b = 1'b0;
         #10;
-        $display("@%0t: TEST A=0 B=0 → Y=%b", $time, c);
+        verify_or_gate(a, b, c);
         
+        // Test Case 2: a=1, b=0
         a = 1'b1; b = 1'b0;
         #10;
-        $display("@%0t: TEST A=1 B=0 → Y=%b", $time, c);
+        verify_or_gate(a, b, c);
         
+        // Test Case 3: a=0, b=1
         a = 1'b0; b = 1'b1;
         #10;
-        $display("@%0t: TEST A=0 B=1 → Y=%b", $time, c);
+        verify_or_gate(a, b, c);
         
+        // Test Case 4: a=1, b=1
         a = 1'b1; b = 1'b1;
         #10;
-        $display("@%0t: TEST A=1 B=1 → Y=%b", $time, c);
+        verify_or_gate(a, b, c);
         
-        #20;
+        // Run random test cases - cycling through all combinations with varying patterns
+        $display("\n=== PATTERN TEST CASES ===");
+        
+        // Run 24 tests (6 sets of all 4 combinations)
+        for (i = 0; i < 24; i = i + 1) begin
+            // Cycle through all combinations in different sequences
+            test_index = i % 4;
+            
+            case (test_index)
+                0: begin a = 1'b0; b = 1'b0; end
+                1: begin a = 1'b0; b = 1'b1; end
+                2: begin a = 1'b1; b = 1'b0; end
+                3: begin a = 1'b1; b = 1'b1; end
+            endcase
+            
+            #10;
+            verify_or_gate(a, b, c);
+        end
+        
+        // Use xor of counter and addresses to generate semi-random patterns
+        $display("\n=== ALGORITHMIC TEST CASES ===");
+        for (i = 0; i < 72; i = i + 1) begin
+            // Generate a/b based on counter bits and their combinations
+            a = (i & 1) | ((i >> 2) & 1);       // Use bits 0 and 2
+            b = ((i >> 1) & 1) ^ ((i >> 3) & 1); // Use bits 1 and 3, XORed
+            
+            #10;
+            verify_or_gate(a, b, c);
+        end
+        
+        // Print final test results
+        $display("\n=== TEST RESULTS ===");
+        $display("Total tests:   %0d", test_counter);
+        $display("Passed tests:  %0d", pass_counter);
+        $display("Failed tests:  %0d", fail_counter);
+        if (fail_counter == 0)
+            $display("OVERALL: PASS - All tests passed!\n");
+        else
+            $display("OVERALL: FAIL - %0d tests failed!\n", fail_counter);
+        
         $display("Test completed");
         $finish;
     end
+    
+    // Task to verify OR gate functionality
+    task verify_or_gate;
+        input a_val;
+        input b_val;
+        input c_val;
+        
+            // Calculate expected result for OR gate
+            reg expected;
+        begin
+            test_counter = test_counter + 1;
+            
+            expected = a_val | b_val;
+            
+            if (c_val === expected) begin
+                $display("Test %0d: a=%b, b=%b, c=%b (expected %b) - PASS", 
+                         test_counter, a_val, b_val, c_val, expected);
+                pass_counter = pass_counter + 1;
+            end
+            else begin
+                $display("Test %0d: a=%b, b=%b, c=%b (expected %b) - FAIL", 
+                         test_counter, a_val, b_val, c_val, expected);
+                fail_counter = fail_counter + 1;
+            end
+        end
+    endtask
     
     // Count bits on programming clock
     always @(posedge prog_clk) begin

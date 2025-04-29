@@ -12,42 +12,65 @@ module tb();
     wire [0:0] prog_clk;
     wire [0:0] set;
     wire [0:0] reset;
-    wire [0:7] gfpga_pad_GPIO_PAD;
+    wire [0:95] gfpga_pad_GPIO_PAD;
     wire [0:0] ccff_head;
     wire [0:0] ccff_tail;
     
-    // Input/output signals for OR2 gate
-    reg [0:0] a;
-    reg [0:0] b;
-    wire [0:0] c;
+    // UART Receiver signals
+    wire [0:0] i_clk;          // UART clock
+    reg [0:0] i_rst;           // UART reset
+    reg [0:0] r_DATA_SER;      // Serial data input
+    
+    // UART Receiver outputs
+    wire [0:0] recv_DATA_0;    // Received data bit 0
+    wire [0:0] recv_DATA_1;    // Received data bit 1
+    wire [0:0] recv_DATA_2;    // Received data bit 2
+    wire [0:0] recv_DATA_3;    // Received data bit 3
+    wire [0:0] t_DATA_SER;     // Transmit data serial
+    wire [0:0] rec_done;       // Receive done flag
+    wire [0:0] t_done;         // Transmit done flag
     
     // Reset signals
     reg [0:0] __prog_reset__;
     reg [0:0] __set__;
     reg [0:0] __greset__;
     
-    // Testing variables
+    // Monitoring variables
     integer bit_counter = 0;
     integer test_counter = 0;
     integer pass_counter = 0;
     integer fail_counter = 0;
-    integer i, test_index;
     
-    // Force output to 0 at time 0 for visualization
+    // Create clock for UART and connect to FPGA
+    assign i_clk = instan.FabricB.op_clk;
+    
+    // Force initial output state to avoid X propagation
     initial begin
-        force gfpga_pad_GPIO_PAD[3] = 1'b0;
+        force gfpga_pad_GPIO_PAD[14] = 1'b0; // recv_DATA_0
+        force gfpga_pad_GPIO_PAD[12] = 1'b0; // recv_DATA_1
+        force gfpga_pad_GPIO_PAD[8] = 1'b0;  // recv_DATA_2
+        force gfpga_pad_GPIO_PAD[10] = 1'b0; // recv_DATA_3
+        force gfpga_pad_GPIO_PAD[13] = 1'b0; // rec_done
+        force gfpga_pad_GPIO_PAD[66] = 1'b0; // t_DATA_SER
+        force gfpga_pad_GPIO_PAD[67] = 1'b0; // t_done
         #1;
-        release gfpga_pad_GPIO_PAD[3];
+        release gfpga_pad_GPIO_PAD[14];
+        release gfpga_pad_GPIO_PAD[12];
+        release gfpga_pad_GPIO_PAD[8];
+        release gfpga_pad_GPIO_PAD[10];
+        release gfpga_pad_GPIO_PAD[13];
+        release gfpga_pad_GPIO_PAD[66];
+        release gfpga_pad_GPIO_PAD[67];
     end
     
     // Time-zero initialization
     initial begin
         // Initialize variables
-        __prog_reset__ = 1'b1;
-        __set__ = 1'b0;
-        __greset__ = 1'b1;
-        a = 1'b0;
-        b = 1'b0;
+        __prog_reset__ = 1'b1;  // Start with prog_reset active
+        __set__ = 1'b0;         // Start with set signal inactive
+        __greset__ = 1'b1;      // Start with global reset active
+        i_rst = 1'b0;           // Initialize UART reset
+        r_DATA_SER = 1'b1;      // Initialize serial data line idle high
         
         // Programming reset sequence
         #4 __prog_reset__ = 1'b0;
@@ -64,60 +87,28 @@ module tb();
         #2 __greset__ = 1'b1;
         #4 __greset__ = 1'b0;
         
-        // First run the fixed test cases for deterministic verification
-        $display("\n=== FIXED TEST CASES ===");
-        
-        // Test Case 1: a=0, b=0
-        a = 1'b0; b = 1'b0;
+        // UART reset sequence
+        i_rst = 1'b1;   // Assert UART reset
         #10;
-        verify_or_gate(a, b, c);
-        
-        // Test Case 2: a=1, b=0
-        a = 1'b1; b = 1'b0;
+        i_rst = 1'b0;   // Deassert UART reset
         #10;
-        verify_or_gate(a, b, c);
         
-        // Test Case 3: a=0, b=1
-        a = 1'b0; b = 1'b1;
-        #10;
-        verify_or_gate(a, b, c);
+        // Begin UART testing
+        $display("\n=== UART RECEIVER TESTS ===");
         
-        // Test Case 4: a=1, b=1
-        a = 1'b1; b = 1'b1;
-        #10;
-        verify_or_gate(a, b, c);
+        // Test 1: Send byte 0xA (binary 1010)
+        send_uart_byte(4'b1010);
         
-        // Run random test cases - cycling through all combinations with varying patterns
-        $display("\n=== PATTERN TEST CASES ===");
+        // Test 2: Send byte 0x5 (binary 0101)
+        send_uart_byte(4'b0101);
         
-        // Run 24 tests (6 sets of all 4 combinations)
-        for (i = 0; i < 24; i = i + 1) begin
-            // Cycle through all combinations in different sequences
-            test_index = i % 4;
-            
-            case (test_index)
-                0: begin a = 1'b0; b = 1'b0; end
-                1: begin a = 1'b0; b = 1'b1; end
-                2: begin a = 1'b1; b = 1'b0; end
-                3: begin a = 1'b1; b = 1'b1; end
-            endcase
-            
-            #10;
-            verify_or_gate(a, b, c);
-        end
+        // Test 3: Send byte 0xF (binary 1111)
+        send_uart_byte(4'b1111);
         
-        // Use xor of counter and addresses to generate semi-random patterns
-        $display("\n=== ALGORITHMIC TEST CASES ===");
-        for (i = 0; i < 72; i = i + 1) begin
-            // Generate a/b based on counter bits and their combinations
-            a = (i & 1) | ((i >> 2) & 1);       // Use bits 0 and 2
-            b = ((i >> 1) & 1) ^ ((i >> 3) & 1); // Use bits 1 and 3, XORed
-            
-            #10;
-            verify_or_gate(a, b, c);
-        end
+        // Test 4: Send byte 0x0 (binary 0000)
+        send_uart_byte(4'b0000);
         
-        // Print final test results
+        // Print test results
         $display("\n=== TEST RESULTS ===");
         $display("Total tests:   %0d", test_counter);
         $display("Passed tests:  %0d", pass_counter);
@@ -131,27 +122,55 @@ module tb();
         $finish;
     end
     
-    // Task to verify OR gate functionality
-    task verify_or_gate;
-        input a_val;
-        input b_val;
-        input c_val;
+    // Task to send a UART byte (4 bits with start and stop bits)
+    task send_uart_byte;
+        input [3:0] data;
         
-            // Calculate expected result for OR gate
-            reg expected;
+        integer i;
+        reg [3:0] expected_data;
         begin
             test_counter = test_counter + 1;
+            expected_data = data;
             
-            expected = a_val | b_val;
+            $display("\nTest %0d: Sending UART data: %b", test_counter, data);
             
-            if (c_val === expected) begin
-                $display("Test %0d: a=%b, b=%b, c=%b (expected %b) - PASS", 
-                         test_counter, a_val, b_val, c_val, expected);
+            // Start bit (low)
+            r_DATA_SER = 1'b0;
+            #16000; // Wait for 16 clock cycles (assuming baud rate is clk/16)
+            
+            // Send 4 data bits LSB first
+            for (i = 0; i < 4; i = i + 1) begin
+                r_DATA_SER = data[i];
+                #16000; // Wait for 16 clock cycles
+            end
+            
+            // Stop bit (high)
+            r_DATA_SER = 1'b1;
+            #16000; // Wait for 16 clock cycles
+            
+            // Wait for receive done signal
+            wait(rec_done == 1'b1);
+            #1000; // Additional wait to allow signals to stabilize
+            
+            // Verify received data
+            verify_uart_data(expected_data);
+        end
+    endtask
+    
+    // Task to verify received UART data
+    task verify_uart_data;
+        input [3:0] expected;
+        
+        begin
+            // Check if received data matches expected data
+            if ({recv_DATA_3, recv_DATA_2, recv_DATA_1, recv_DATA_0} === expected) begin
+                $display("Test %0d: Received data: %b%b%b%b (expected %b) - PASS", 
+                         test_counter, recv_DATA_3, recv_DATA_2, recv_DATA_1, recv_DATA_0, expected);
                 pass_counter = pass_counter + 1;
             end
             else begin
-                $display("Test %0d: a=%b, b=%b, c=%b (expected %b) - FAIL", 
-                         test_counter, a_val, b_val, c_val, expected);
+                $display("Test %0d: Received data: %b%b%b%b (expected %b) - FAIL", 
+                         test_counter, recv_DATA_3, recv_DATA_2, recv_DATA_1, recv_DATA_0, expected);
                 fail_counter = fail_counter + 1;
             end
         end
@@ -162,7 +181,7 @@ module tb();
         bit_counter = bit_counter + 1;
     end
     
-    // Clock generation
+    // Clock generation for RISC-V core
     initial begin
         clk = 1'b0;
         forever begin
@@ -170,53 +189,84 @@ module tb();
         end
     end
     
-    // Reset for RISC-V
+    // Reset for RISC-V processor
     initial begin
         rst = 1'b0;
         #3 rst = 1'b1;
     end
     
-    // Connect signals
+    // Connect reset signals to FPGA
     assign pReset[0] = __prog_reset__;
     assign set[0] = __set__;
     assign reset[0] = __greset__;
-    assign gfpga_pad_GPIO_PAD[7] = a[0];
-    assign gfpga_pad_GPIO_PAD[6] = b[0];
-    assign c[0] = gfpga_pad_GPIO_PAD[3];
-    assign gfpga_pad_GPIO_PAD[0] = 1'b0;
-    assign gfpga_pad_GPIO_PAD[1] = 1'b0;
-    assign gfpga_pad_GPIO_PAD[2] = 1'b0;
-    assign gfpga_pad_GPIO_PAD[4] = 1'b0;
-    assign gfpga_pad_GPIO_PAD[5] = 1'b0;
+    
+    // Connect UART signals to FPGA GPIO pads
+    assign gfpga_pad_GPIO_PAD[9] = i_clk;            // UART clock
+    assign gfpga_pad_GPIO_PAD[17] = i_rst;           // UART reset
+    assign gfpga_pad_GPIO_PAD[61] = r_DATA_SER;      // Serial data input
+    
+    // Get UART outputs from FPGA GPIO pads
+    assign recv_DATA_0 = gfpga_pad_GPIO_PAD[14];     // Received data bit 0
+    assign recv_DATA_1 = gfpga_pad_GPIO_PAD[12];     // Received data bit 1
+    assign recv_DATA_2 = gfpga_pad_GPIO_PAD[8];      // Received data bit 2
+    assign recv_DATA_3 = gfpga_pad_GPIO_PAD[10];     // Received data bit 3
+    assign t_DATA_SER = gfpga_pad_GPIO_PAD[66];      // Transmit data serial
+    assign rec_done = gfpga_pad_GPIO_PAD[13];        // Receive done flag
+    assign t_done = gfpga_pad_GPIO_PAD[67];          // Transmit done flag
+    
+    // Initialize all unused GPIO pads to 0
+    genvar gpio_idx;
+    generate
+        for (gpio_idx = 0; gpio_idx < 96; gpio_idx = gpio_idx + 1) begin: gpio_init
+            if (gpio_idx != 9 && gpio_idx != 17 && gpio_idx != 61 && 
+                gpio_idx != 14 && gpio_idx != 12 && gpio_idx != 8 && 
+                gpio_idx != 10 && gpio_idx != 66 && gpio_idx != 13 && 
+                gpio_idx != 67) begin
+                assign gfpga_pad_GPIO_PAD[gpio_idx] = 1'b0;
+            end
+        end
+    endgenerate
     
     // RISC-V processor instantiation
     RISCV instan(
-        clk,
-        test,
-        rst,
-        ccff_head,
-        ccff_tail,
-        prog_clk,
-        instan.FabricB.op_clk,
-        reset
+        clk,                      // Input clock to RISC-V
+        test,                     // Output test signals 
+        rst,                      // RISC-V reset
+        ccff_head,                // Configuration chain head
+        ccff_tail,                // Configuration chain tail
+        prog_clk,                 // Programming clock (generated by FCB)
+        instan.FabricB.op_clk,    // Operating clock (generated by FCB)
+        reset                     // Global reset signal
     );
     
     // FPGA top-level instantiation
     fpga_top fabric(
-        pReset[0],
-        prog_clk[0],
-        set[0],
-        reset[0],
-        instan.FabricB.op_clk,
-        gfpga_pad_GPIO_PAD[0:7],
-        ccff_head,
-        ccff_tail
+        pReset[0],                // Programming reset
+        prog_clk[0],              // Programming clock
+        set[0],                   // Set signal
+        reset[0],                 // Global reset
+        instan.FabricB.op_clk,    // Operating clock
+        gfpga_pad_GPIO_PAD[0:95], // GPIO pins - now with 96 pads
+        ccff_head,                // Configuration chain head
+        ccff_tail                 // Configuration chain tail
     );
     
     // Waveform dumping
     initial begin
-        $dumpfile("waves.vcd");
+        $dumpfile("uart_receiver_test.vcd");
         $dumpvars(0, tb);
+        
+        // Explicitly dump important UART signals
+        $dumpvars(0, i_clk);
+        $dumpvars(0, i_rst);
+        $dumpvars(0, r_DATA_SER);
+        $dumpvars(0, recv_DATA_0);
+        $dumpvars(0, recv_DATA_1);
+        $dumpvars(0, recv_DATA_2);
+        $dumpvars(0, recv_DATA_3);
+        $dumpvars(0, rec_done);
+        $dumpvars(0, t_DATA_SER);
+        $dumpvars(0, t_done);
     end
     
     // File for raw bit dump

@@ -8,7 +8,7 @@ input [31:0] address;
 input [31:0] dataIn;
 input rst;
 
-reg [7:0] register [0:511];
+reg [7:0] register [0:2999];
 
 initial 
 begin

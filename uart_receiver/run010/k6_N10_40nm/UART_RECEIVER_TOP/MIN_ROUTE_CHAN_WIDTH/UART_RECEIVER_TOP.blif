@@ -1,0 +1,302 @@
+# Benchmark "UART_RECEIVER_TOP" written by ABC on Tue Apr 29 16:07:48 2025
+.model UART_RECEIVER_TOP
+.inputs i_clk i_rst i_dv r_DATA_SER tx_dat[0] \
+tx_dat[1] tx_dat[2] tx_dat[3] 
+.outputs recv_DATA[0] recv_DATA[1] recv_DATA[2] \
+recv_DATA[3] t_DATA_SER rec_done t_done 
+
+.latch n32 R_INST.STATE[0] re i_clk 2
+.latch n37 R_INST.STATE[1] re i_clk 2
+.latch n42 R_INST.STATE[2] re i_clk 2
+.latch n47 R_INST.CLK_COUNT[0] re i_clk 0
+.latch n52 R_INST.CLK_COUNT[1] re i_clk 0
+.latch n57 R_INST.CLK_COUNT[2] re i_clk 0
+.latch n62 R_INST.CLK_COUNT[3] re i_clk 0
+.latch n67 R_INST.CLK_COUNT[4] re i_clk 0
+.latch n72 R_INST.CLK_COUNT[5] re i_clk 0
+.latch n77 R_INST.CLK_COUNT[6] re i_clk 0
+.latch n82 R_INST.CLK_COUNT[7] re i_clk 0
+.latch n87 R_INST.CLK_COUNT[8] re i_clk 0
+.latch n92 R_INST.CLK_COUNT[9] re i_clk 0
+.latch n97 R_INST.BIT_POS[0] re i_clk 2
+.latch n102 R_INST.BIT_POS[1] re i_clk 2
+.latch n107 R_INST.BIT_POS[2] re i_clk 2
+.latch n112 R_INST.DATA_BYTE[0] re i_clk 2
+.latch n117 R_INST.DATA_BYTE[1] re i_clk 2
+.latch n122 R_INST.DATA_BYTE[2] re i_clk 2
+.latch n127 R_INST.DATA_BYTE[3] re i_clk 2
+.latch n132 rec_done re i_clk 2
+.latch n136 recv_DATA[0] re i_clk 2
+.latch n140 recv_DATA[1] re i_clk 2
+.latch n144 recv_DATA[2] re i_clk 2
+.latch n148 recv_DATA[3] re i_clk 2
+
+.names $undef
+ 0
+.names $abc$2350$new_n59_ R_INST.STATE[2] R_INST.STATE[1] \
+ $abc$2350$new_n55_ i_rst n37
+--111 1
+11--1 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ $abc$2350$new_n58_ \
+ $abc$2350$new_n55_
+-00 1
+1-0 1
+.names R_INST.CLK_COUNT[7] R_INST.CLK_COUNT[4] R_INST.CLK_COUNT[5] \
+ R_INST.CLK_COUNT[9] R_INST.CLK_COUNT[8] R_INST.CLK_COUNT[6] \
+ $abc$2350$new_n56_
+001111 1
+.names R_INST.CLK_COUNT[1] R_INST.CLK_COUNT[0] R_INST.CLK_COUNT[2] \
+ R_INST.CLK_COUNT[3] $abc$2350$new_n57_
+-000 1
+0-00 1
+.names R_INST.CLK_COUNT[5] R_INST.CLK_COUNT[4] R_INST.CLK_COUNT[6] \
+ R_INST.CLK_COUNT[7] R_INST.CLK_COUNT[8] R_INST.CLK_COUNT[9] \
+ $abc$2350$new_n58_
+---111 1
+111-11 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ $abc$2350$new_n58_ \
+ R_INST.BIT_POS[2] $abc$2350$new_n60_ $abc$2350$new_n59_
+--111 1
+01-11 1
+.names R_INST.BIT_POS[1] R_INST.BIT_POS[0] $abc$2350$new_n60_
+11 1
+.names $abc$2350$new_n64_ $abc$2350$new_n62_ i_rst n32
+011 0
+.names r_DATA_SER $abc$2350$new_n63_ $abc$2350$new_n56_ R_INST.STATE[0] \
+ $abc$2350$new_n62_
+---0 1
+011- 1
+.names R_INST.CLK_COUNT[3] R_INST.CLK_COUNT[2] R_INST.CLK_COUNT[1] \
+ R_INST.CLK_COUNT[0] $abc$2350$new_n63_
+0011 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ $abc$2350$new_n58_ \
+ R_INST.STATE[1] $abc$2350$new_n64_
+--11 1
+01-1 1
+.names $abc$2350$new_n66_ $abc$2350$new_n67_ $abc$2350$new_n59_ \
+ R_INST.STATE[2] i_rst n42
+--011 1
+11--1 1
+.names $abc$2350$new_n63_ $abc$2350$new_n56_ $abc$2350$new_n66_
+11 1
+.names r_DATA_SER R_INST.STATE[0] $abc$2350$new_n67_
+01 1
+.names R_INST.STATE[0] $abc$2350$new_n62_ $abc$2350$new_n55_ i_rst \
+ R_INST.STATE[2] R_INST.BIT_POS[0] n97
+---0-1 1
+--0110 1
+--1-11 1
+-0---1 1
+0---01 1
+.names $abc$2350$new_n62_ $abc$2350$new_n55_ $abc$2350$new_n72_ \
+ R_INST.BIT_POS[0] R_INST.STATE[2] R_INST.BIT_POS[1] n102
+---011 1
+--0--1 1
+-01110 1
+-1--11 1
+0----1 1
+.names R_INST.STATE[0] R_INST.STATE[2] i_rst $abc$2350$new_n72_
+-11 1
+1-1 1
+.names $abc$2350$new_n77_ $abc$2350$new_n79_ R_INST.CLK_COUNT[0] i_rst n47
+-011 1
+0-01 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ $abc$2350$new_n78_ \
+ $abc$2350$new_n58_ $abc$2350$new_n67_ $abc$2350$new_n77_
+---10 1
+--1-0 1
+01--0 1
+.names R_INST.STATE[1] R_INST.STATE[2] $abc$2350$new_n78_
+00 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ R_INST.STATE[1] \
+ $abc$2350$new_n58_ $abc$2350$new_n80_ $abc$2350$new_n79_
+--0-1 1
+-0-01 1
+1--01 1
+.names R_INST.STATE[1] R_INST.STATE[2] r_DATA_SER R_INST.STATE[0] \
+ $abc$2350$new_n80_
+--11 0
+00-0 0
+.names $abc$2350$new_n79_ $abc$2350$new_n77_ R_INST.CLK_COUNT[0] \
+ R_INST.CLK_COUNT[1] i_rst n52
+-0011 1
+-0101 1
+0--11 1
+.names $abc$2350$new_n56_ $abc$2350$new_n58_ $abc$2350$new_n80_ \
+ R_INST.STATE[1] R_INST.CLK_COUNT[2] $abc$2350$new_n84_
+--0-1 1
+-1-11 1
+1--11 1
+.names $abc$2350$new_n58_ $abc$2350$new_n78_ $abc$2350$new_n63_ \
+ $abc$2350$new_n67_ $abc$2350$new_n56_ $abc$2350$new_n85_
+---10 0
+--01- 0
+00--0 0
+.names R_INST.CLK_COUNT[1] R_INST.CLK_COUNT[0] R_INST.CLK_COUNT[2] \
+ $abc$2350$new_n87_
+111 1
+.names $abc$2350$new_n79_ $abc$2350$new_n77_ $abc$2350$new_n87_ \
+ R_INST.CLK_COUNT[3] i_rst n62
+-0011 1
+-0101 1
+0--11 1
+.names $abc$2350$new_n79_ $abc$2350$new_n77_ $abc$2350$new_n90_ \
+ R_INST.CLK_COUNT[4] i_rst n67
+-0011 1
+-0101 1
+0--11 1
+.names R_INST.CLK_COUNT[3] $abc$2350$new_n87_ $abc$2350$new_n90_
+11 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ R_INST.STATE[2] \
+ $abc$2350$new_n58_ R_INST.STATE[1] $abc$2350$new_n92_
+---10 1
+--0-0 1
+01--0 1
+.names $abc$2350$new_n58_ $abc$2350$new_n94_ R_INST.CLK_COUNT[5] \
+ $abc$2350$new_n93_
+-01 1
+010 1
+1-1 1
+.names R_INST.CLK_COUNT[1] R_INST.CLK_COUNT[3] R_INST.CLK_COUNT[0] \
+ R_INST.CLK_COUNT[2] R_INST.CLK_COUNT[4] $abc$2350$new_n94_
+11111 1
+.names R_INST.CLK_COUNT[5] R_INST.CLK_COUNT[1] R_INST.CLK_COUNT[3] \
+ R_INST.CLK_COUNT[0] R_INST.CLK_COUNT[2] R_INST.CLK_COUNT[4] \
+ $abc$2350$new_n100_
+111111 1
+.names $abc$2350$new_n58_ $abc$2350$new_n100_ R_INST.CLK_COUNT[6] \
+ $abc$2350$new_n101_
+000 1
+011 1
+.names R_INST.CLK_COUNT[6] $abc$2350$new_n57_ $abc$2350$new_n56_ \
+ R_INST.STATE[2] R_INST.STATE[1] $abc$2350$new_n58_ $abc$2350$new_n102_
+--0-10 1
+--01-0 1
+-1--10 1
+-1-1-0 1
+1---1- 1
+.names $abc$2350$new_n77_ R_INST.CLK_COUNT[7] $abc$2350$new_n79_ \
+ $abc$2350$new_n105_ i_rst n82
+-0111 1
+-10-1 1
+0-011 1
+01-01 1
+.names $abc$2350$new_n67_ $abc$2350$new_n58_ R_INST.CLK_COUNT[6] \
+ $abc$2350$new_n100_ $abc$2350$new_n105_
+-011 1
+1-11 1
+.names $abc$2350$new_n107_ $abc$2350$new_n92_ $abc$2350$new_n109_ i_rst \
+ $abc$2350$new_n64_ $abc$2350$new_n108_ n87
+---0-- 0
+--0-00 0
+01--00 0
+.names $abc$2350$new_n63_ $abc$2350$new_n56_ $abc$2350$new_n67_ \
+ $abc$2350$new_n107_
+-01 1
+0-1 1
+.names $abc$2350$new_n80_ R_INST.CLK_COUNT[8] $abc$2350$new_n108_
+01 1
+.names R_INST.CLK_COUNT[6] R_INST.CLK_COUNT[7] $abc$2350$new_n100_ \
+ R_INST.CLK_COUNT[8] $abc$2350$new_n109_
+--01 1
+-0-1 1
+0--1 1
+1110 1
+.names $abc$2350$new_n79_ $abc$2350$new_n107_ $abc$2350$new_n92_ \
+ $abc$2350$new_n111_ R_INST.CLK_COUNT[9] i_rst n92
+--0011 1
+--0101 1
+-1-011 1
+-1-101 1
+0---11 1
+.names R_INST.CLK_COUNT[8] R_INST.CLK_COUNT[6] R_INST.CLK_COUNT[7] \
+ $abc$2350$new_n100_ $abc$2350$new_n111_
+1111 1
+.names r_DATA_SER R_INST.BIT_POS[1] R_INST.BIT_POS[0] $abc$2350$new_n113_ \
+ R_INST.DATA_BYTE[0] n112
+---01 1
+--1-1 1
+-1--1 1
+1001- 1
+.names R_INST.BIT_POS[2] R_INST.STATE[2] i_rst $abc$2350$new_n113_
+011 1
+.names r_DATA_SER R_INST.BIT_POS[1] R_INST.BIT_POS[0] $abc$2350$new_n113_ \
+ R_INST.DATA_BYTE[1] n117
+---01 1
+--0-1 1
+-1--1 1
+1011- 1
+.names r_DATA_SER R_INST.BIT_POS[0] R_INST.BIT_POS[1] $abc$2350$new_n113_ \
+ R_INST.DATA_BYTE[2] n122
+---01 1
+--0-1 1
+-1--1 1
+1011- 1
+.names r_DATA_SER R_INST.DATA_BYTE[3] $abc$2350$new_n113_ \
+ $abc$2350$new_n60_ n127
+-1-0 1
+-10- 1
+1-11 1
+.names recv_DATA[0] R_INST.DATA_BYTE[0] $abc$2350$new_n64_ i_rst n136
+-111 1
+1-01 1
+.names recv_DATA[1] R_INST.DATA_BYTE[1] $abc$2350$new_n64_ i_rst n140
+-111 1
+1-01 1
+.names recv_DATA[2] R_INST.DATA_BYTE[2] $abc$2350$new_n64_ i_rst n144
+-111 1
+1-01 1
+.names recv_DATA[3] R_INST.DATA_BYTE[3] $abc$2350$new_n64_ i_rst n148
+-111 1
+1-01 1
+.names $abc$2350$new_n55_ $abc$2350$new_n67_ $abc$2350$new_n66_ \
+ R_INST.STATE[1] rec_done i_rst n132
+---111 1
+--0-11 1
+-0--11 1
+0--1-1 1
+.names $abc$2350$new_n57_ $abc$2350$new_n56_ $abc$2350$new_n58_ \
+ $abc$2350$new_n60_ $abc$2350$new_n122_
+--11 1
+01-1 1
+.names $abc$2350$new_n62_ $abc$2350$new_n72_ $abc$2350$new_n122_ \
+ R_INST.STATE[2] i_rst R_INST.BIT_POS[2] n107
+--0111 1
+--1110 1
+-0---1 1
+0---11 1
+.names $abc$2350$new_n84_ R_INST.CLK_COUNT[1] R_INST.CLK_COUNT[0] \
+ $abc$2350$new_n85_ R_INST.CLK_COUNT[2] i_rst n57
+--0011 1
+-0-011 1
+-11001 1
+1----1 1
+.names $abc$2350$new_n63_ $abc$2350$new_n56_ $abc$2350$new_n94_ r_DATA_SER \
+ R_INST.CLK_COUNT[5] R_INST.STATE[0] $abc$2350$new_n125_
+----10 1
+---101 1
+--0-01 1
+--101- 1
+11-0-1 1
+.names $abc$2350$new_n78_ $abc$2350$new_n93_ $abc$2350$new_n92_ \
+ R_INST.STATE[0] $abc$2350$new_n125_ i_rst n72
+---101 1
+-10--1 1
+1--011 1
+.names $abc$2350$new_n63_ $abc$2350$new_n56_ $abc$2350$new_n100_ r_DATA_SER \
+ R_INST.CLK_COUNT[6] R_INST.STATE[0] $abc$2350$new_n127_
+----10 1
+---101 1
+--0-01 1
+--101- 1
+11-0-1 1
+.names $abc$2350$new_n78_ $abc$2350$new_n102_ $abc$2350$new_n101_ \
+ R_INST.STATE[0] $abc$2350$new_n127_ i_rst n77
+---101 1
+-10--1 1
+1--011 1
+.names $undef t_DATA_SER
+1 1
+.names $undef t_done
+1 1
+.end

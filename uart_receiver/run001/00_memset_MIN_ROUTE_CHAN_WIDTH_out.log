@@ -1,0 +1,19 @@
+* * * * * * * * * * * * * * * * * * * * 
+RunDirectory : /home/fizza/work/uart_receiver/run001
+python3 /home/fizza/OpenFPGA/openfpga_flow/scripts/run_fpga_flow.py /home/fizza/work/uart_receiver/k6_N10_tileable_dpram8K_dsp36_40nm.xml /home/fizza/OpenFPGA/openfpga_flow/benchmarks/vtr_benchmark/ch_intrinsics.v --top_module memset --run_dir /home/fizza/work/uart_receiver/run001/k6_N10_tileable_dpram8K_dsp36_40nm/memset/MIN_ROUTE_CHAN_WIDTH --fpga_flow yosys_vpr --openfpga_shell_template /home/fizza/work/uart_receiver/vtr_benchmark_template_script.openfpga --openfpga_arch_file /home/fizza/OpenFPGA/openfpga_flow/openfpga_arch/k6_frac_N10_adder_chain_dpram8K_dsp36_40nm_openfpga.xml --openfpga_sim_setting_file /home/fizza/OpenFPGA/openfpga_flow/openfpga_simulation_settings/fixed_sim_openfpga.xml --vpr_route_chan_width 300 --yosys_tmpl /home/fizza/OpenFPGA/openfpga_flow/misc/ys_tmpl_yosys_vpr_bram_dsp_flow.ys --vpr_fpga_verilog --vpr_fpga_verilog_dir /home/fizza/work/uart_receiver/run001/k6_N10_tileable_dpram8K_dsp36_40nm/memset/MIN_ROUTE_CHAN_WIDTH --vpr_fpga_x2p_rename_illegal_port --flow_config /home/fizza/work/uart_receiver/config/task.conf --TOP memset --READ_VERILOG_OPTIONS -nolatches --YOSYS_BRAM_MAP_RULES /home/fizza/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_40nm_bram.txt --YOSYS_BRAM_MAP_VERILOG /home/fizza/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_40nm_bram_map.v --YOSYS_CELL_SIM_VERILOG /home/fizza/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_40nm_cell_sim.v --YOSYS_DSP_MAP_PARAMETERS -D DSP_A_MAXWIDTH=36 -D DSP_B_MAXWIDTH=36 -D DSP_A_MINWIDTH=2 -D DSP_B_MINWIDTH=2 -D DSP_NAME=mult_36x36 --YOSYS_DSP_MAP_VERILOG /home/fizza/OpenFPGA/openfpga_flow/openfpga_yosys_techlib/k6_frac_N10_tileable_adder_chain_dpram8K_dsp36_40nm_dsp_map.v
+* * * * * * * * * * * * * * * * * * * * 
+INFO - Validating command line arguments
+INFO - Run directory : /home/fizza/work/uart_receiver/run001/k6_N10_tileable_dpram8K_dsp36_40nm/memset/MIN_ROUTE_CHAN_WIDTH
+INFO - Running "yosys_vpr" Flow
+INFO - Extracted lut_size size from arch XML = 6
+INFO - Running Yosys with lut_size = 6
+INFO - Launching Run yosys 
+INFO - Run yosys is written in file yosys_output.log
+INFO - Launching Yosys 
+INFO - Yosys is written in file yosys_rewrite.log
+INFO - Running OpenFPGA Shell Engine 
+INFO - Launching OpenFPGA Shell Run 
+INFO - OpenFPGAShell Revision: v8.0.0-7093-g9e53e9a0a Compiled: 2023-03-22T18:43:34
+INFO - OpenFPGA Shell Run is written in file openfpgashell.log
+INFO - vpr result extracted in file vpr_stat.result
+INFO - Openfpga_flow completed, Total Time Taken 4 Sec  VPR Time 1 Sec  

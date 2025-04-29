@@ -1,0 +1,21 @@
+* * * * * * * * * * * * * * * * * * * * 
+RunDirectory : /home/fizza/work/or/run003
+python3 /home/fizza/OpenFPGA/openfpga_flow/scripts/run_fpga_flow.py /home/fizza/work/or/k6_frac_N10_adder_chain_40nm.xml /home/fizza/work/or/or.v --top_module or2 --run_dir /home/fizza/work/or/run003/k6_frac_N10_adder_chain_40nm/or2/MIN_ROUTE_CHAN_WIDTH --fpga_flow yosys_vpr --openfpga_shell_template /home/fizza/work/or/example_script.openfpga --openfpga_arch_file /home/fizza/work/or/k6_frac_N10_adder_chain_40nm_openfpga.xml --openfpga_sim_setting_file /home/fizza/OpenFPGA/openfpga_flow/openfpga_simulation_settings/fixed_sim_openfpga.xml --vpr_route_chan_width 300 --power --power_tech /home/fizza/OpenFPGA/openfpga_flow/tech/PTM_45nm/45nm.xml --vpr_fpga_verilog --vpr_fpga_verilog_dir /home/fizza/work/or/run003/k6_frac_N10_adder_chain_40nm/or2/MIN_ROUTE_CHAN_WIDTH --vpr_fpga_x2p_rename_illegal_port --flow_config /home/fizza/work/or/config/task.conf --TOP or2
+* * * * * * * * * * * * * * * * * * * * 
+INFO - Validating command line arguments
+INFO - Run directory : /home/fizza/work/or/run003/k6_frac_N10_adder_chain_40nm/or2/MIN_ROUTE_CHAN_WIDTH
+INFO - Running "yosys_vpr" Flow
+INFO - Extracted lut_size size from arch XML = 6
+INFO - Running Yosys with lut_size = 6
+INFO - Launching Run yosys 
+INFO - Run yosys is written in file yosys_output.log
+INFO - ACE2 output is written in file or2_ace2_output.txt
+INFO - blif_3args output is written in file or2_blif_3args_output.txt
+INFO - Launching Yosys 
+INFO - Yosys is written in file yosys_rewrite.log
+INFO - Running OpenFPGA Shell Engine 
+INFO - Launching OpenFPGA Shell Run 
+INFO - OpenFPGAShell Revision: v8.0.0-7093-g9e53e9a0a Compiled: 2023-03-22T18:43:34
+INFO - OpenFPGA Shell Run is written in file openfpgashell.log
+INFO - vpr result extracted in file vpr_stat.result
+INFO - Openfpga_flow completed, Total Time Taken 0 Sec  VPR Time 0 Sec  

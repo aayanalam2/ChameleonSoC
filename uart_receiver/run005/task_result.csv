@@ -1,2 +1,0 @@
-name,TotalRunTime,average_net_length,clb_blocks,io_blocks,packing_time,placement_time,routing_time,total_logic_block_area,total_routing_area,total_routing_time,total_wire_length
-00_UART_RECEIVER_TOP_MIN_ROUTE_CHAN_WIDTH,3,7.47619,7,10,0.03,0.00,0.13,377258,25108.5,0.13,314

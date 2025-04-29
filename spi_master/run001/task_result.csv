@@ -1,2 +1,0 @@
-name,TotalRunTime,average_net_length,clb_blocks,io_blocks,packing_time,placement_time,routing_time,total_logic_block_area,total_routing_area,total_routing_time,total_wire_length
-00_spi_top_MIN_ROUTE_CHAN_WIDTH,3,9.86842,10,70,0.05,0.00,0.37,538940,55026.4,0.37,750

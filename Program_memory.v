@@ -6,7 +6,7 @@ reg [7:0] Registers[99:0];
 
 initial 
 begin
-  $readmemh("/home/Hassan/ref2/TestInstructions/FCBTest.txt", Registers);
+  $readmemh("TestInstructions/FCBTest.txt", Registers);
 end
 
 always @(Counter_value) begin

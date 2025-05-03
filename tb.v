@@ -16,7 +16,7 @@ module tb();
     wire [0:0] ccff_head;
     wire [0:0] ccff_tail;
     
-    // Input/output signals for OR2 gate
+    // Input/output signals for AND gate
     reg [0:0] a;
     reg [0:0] b;
     wire [0:0] c;
@@ -70,22 +70,22 @@ module tb();
         // Test Case 1: a=0, b=0
         a = 1'b0; b = 1'b0;
         #10;
-        verify_or_gate(a, b, c);
+        verify_and_gate(a, b, c);
         
         // Test Case 2: a=1, b=0
         a = 1'b1; b = 1'b0;
         #10;
-        verify_or_gate(a, b, c);
+        verify_and_gate(a, b, c);
         
         // Test Case 3: a=0, b=1
         a = 1'b0; b = 1'b1;
         #10;
-        verify_or_gate(a, b, c);
+        verify_and_gate(a, b, c);
         
         // Test Case 4: a=1, b=1
         a = 1'b1; b = 1'b1;
         #10;
-        verify_or_gate(a, b, c);
+        verify_and_gate(a, b, c);
         
         // Run random test cases - cycling through all combinations with varying patterns
         $display("\n=== PATTERN TEST CASES ===");
@@ -103,7 +103,7 @@ module tb();
             endcase
             
             #10;
-            verify_or_gate(a, b, c);
+            verify_and_gate(a, b, c);
         end
         
         // Use xor of counter and addresses to generate semi-random patterns
@@ -114,7 +114,7 @@ module tb();
             b = ((i >> 1) & 1) ^ ((i >> 3) & 1); // Use bits 1 and 3, XORed
             
             #10;
-            verify_or_gate(a, b, c);
+            verify_and_gate(a, b, c);
         end
         
         // Print final test results
@@ -131,18 +131,18 @@ module tb();
         $finish;
     end
     
-    // Task to verify OR gate functionality
-    task verify_or_gate;
+    // Task to verify AND gate functionality
+    task verify_and_gate;
         input a_val;
         input b_val;
         input c_val;
         
-            // Calculate expected result for OR gate
-            reg expected;
+        // Calculate expected result for AND gate
+        reg expected;
         begin
             test_counter = test_counter + 1;
             
-            expected = a_val | b_val;
+            expected = a_val & b_val;
             
             if (c_val === expected) begin
                 $display("Test %0d: a=%b, b=%b, c=%b (expected %b) - PASS", 

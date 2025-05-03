@@ -12,20 +12,18 @@
 `include "fabric_netlists.v"
 `include "PC.v"
 `include "PCplus4.v"
-`default_nettype none
-module RISCV( clk, Test_variable, reset, head, tail, programming_clock, op_clk, greset);
+
+module RISCV( clk, Test_variable, reset,gfpga_pad_GPIO_PAD, pReset, set);
 input reset;
 input clk;
+input pReset;
+input set;
 output reg [31:0] Test_variable;
-output head;
-input tail;
-output [0:0] programming_clock;
-output op_clk;
-output greset;
 wire fpga_tail;
 wire  fpga_head;
-wire  [0:0]prog_clk;
-wire programming_reset;
+wire  prog_clk;
+wire op_clk;
+wire greset;
 inout [0:7] gfpga_pad_GPIO_PAD;
 //Setting intermodule connection wires
 wire [31:0] PC_added_4;
@@ -69,8 +67,7 @@ wire [31:0] mem_data_in;
 wire [0:2]mem_control;
 wire [31:0] wbdata;
 wire [31:0] writeback_data;
-assign head = fpga_head;
-assign programming_clock[0] = prog_clk[0];
+
 BussMux2x1 mux_pc_input( PC_added_4, ALU_result, PC_sel, PC_input);
 
 PC PC1( PC_out, PC_input, clk, reset);
@@ -99,9 +96,10 @@ mem_data_in, data_mem_out,  mem_control, mem_write_en, load_type, ALU_result, sr
 dMem DM1(data_mem_out, clk, mem_write, mem_control, mem_addr, mem_data_in, reset);
 
 FCB FabricB (clk, 
-reset, wb_address, wb_data_out, wb_select, wb_stb, wb_we, wb_bus_cycle, wbdata,  fpga_tail, prog_clk[0], fpga_head, greset, op_clk, programming_reset);
+reset, wb_address, wb_data_out, wb_select, wb_stb, wb_we, wb_bus_cycle, wbdata,  fpga_tail, prog_clk, fpga_head, greset, op_clk);
 
-
+//shiftreg SR (fpga_head, prog_clk, reset, fpga_tail);
+fpga_top fabric(pReset,prog_clk,set,greset,op_clk,gfpga_pad_GPIO_PAD,fpga_head,fpga_tail);
 BussMux3x1 write_back_mux( writeback_data, ALU_result, PC_added_4, WB_sel, write_back);
 
 // For Fibonacci sequence

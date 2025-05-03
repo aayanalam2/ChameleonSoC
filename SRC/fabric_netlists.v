@@ -12,8 +12,8 @@
 `include "./SRC/fpga_defines.v"
 
 // ------ Include user-defined netlists -----
-`include "./SRC/verilog/dff.v"
-`include "./SRC/verilog/gpio.v"
+`include "/home/Hassan/testing/SRC/verilog/dff.v"
+`include "/home/Hassan/testing/SRC/verilog/gpio.v"
 // ------ Include primitive module netlists -----
 `include "./SRC/sub_module/inv_buf_passgate.v"
 `include "./SRC/sub_module/arch_encoder.v"

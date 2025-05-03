@@ -8,11 +8,11 @@ input [31:0] address;
 input [31:0] dataIn;
 input rst;
 
-reg [7:0] register [0:2999];
+reg [7:0] register [0:511];
 
 initial 
 begin
-	$readmemh("output.txt", register);
+	$readmemh("/home/Hassan/ref2/output.txt", register);
 end
 always @(*) begin
 	if(!dMemWE)
@@ -46,7 +46,7 @@ always @(posedge clk or negedge rst)
 begin
 	if(!rst)															//Asynchronous Reset (Active Low)
 	begin
-$readmemh("output.txt", register);
+$readmemh("/home/Hassan/ref2/output.txt", register);
 	end
 	
 	else

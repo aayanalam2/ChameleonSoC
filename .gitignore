@@ -1,3 +1,5 @@
 *.vcd
 *.vvp
 head_output.txt
+simv
+fcb_state_to_fix.txt
